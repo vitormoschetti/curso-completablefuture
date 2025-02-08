@@ -2,7 +2,6 @@ package pratica.modulo2.runasync.exercicios;
 
 import java.util.Random;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.TimeUnit;
 
 public class exercicio2 {
 
