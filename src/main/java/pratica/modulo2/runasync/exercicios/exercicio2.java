@@ -42,7 +42,7 @@ public class exercicio2 {
 
     }
 
-    // Simulando o delay para uma aplicação externa entre 500ms e 5000ms
+    // Simulando o delay para uma aplicação externa entre 500ms e 5500ms
     static void simulandoDelay() {
 
         int min = 500;
