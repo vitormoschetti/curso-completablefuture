@@ -24,6 +24,12 @@ public class SimuladorValor {
                 .setScale(2, RoundingMode.HALF_UP);
     }
 
+    public static BigDecimal simularSaldo() {
+        return BigDecimal.valueOf(random.nextInt(200)+10)
+                .multiply(BigDecimal.valueOf(random.nextDouble(100) + 1))
+                .setScale(2, RoundingMode.HALF_UP);
+    }
+
 
     public static BigDecimal simularDolar() {
         return BigDecimal.valueOf(random.nextDouble(0.2)+ 0.1);
