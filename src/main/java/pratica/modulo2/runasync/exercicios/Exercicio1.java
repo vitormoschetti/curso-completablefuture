@@ -2,7 +2,7 @@ package pratica.modulo2.runasync.exercicios;
 
 import java.util.concurrent.CompletableFuture;
 
-public class exercicio1 {
+public class Exercicio1 {
 
     /*
         Crie um programa que use runAsync para executar uma tarefa que exiba "Processando tarefa..." no console.

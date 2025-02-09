@@ -1,11 +1,10 @@
 package pratica.modulo2.runasync.exercicios;
 
-import java.util.Random;
+import shared.SimuladorDelay;
+
 import java.util.concurrent.CompletableFuture;
 
-public class exercicio2 {
-
-    private static final Random RANDOM = new Random();
+public class Exercicio2 {
 
 
     /*
@@ -18,19 +17,19 @@ public class exercicio2 {
 
         //Simulando notificação para o cliente 1
         CompletableFuture<Void> cliente1 = CompletableFuture.runAsync(() -> {
-            simulandoDelay();
+            SimuladorDelay.delay(); // Simulando o delay para uma aplicação externa entre 500ms e 5500ms
             System.out.println("Notificando cliente 1");
         });
 
         //Simulando notificação para o cliente 2
         CompletableFuture<Void> cliente2 = CompletableFuture.runAsync(() -> {
-            simulandoDelay();
+            SimuladorDelay.delay(); // Simulando o delay para uma aplicação externa entre 500ms e 5500ms
             System.out.println("Notificando cliente 2");
         });
 
         //Simulando notificação para o cliente 3
         CompletableFuture<Void> cliente3 = CompletableFuture.runAsync(() -> {
-            simulandoDelay();
+            SimuladorDelay.delay(); // Simulando o delay para uma aplicação externa entre 500ms e 5500ms
             System.out.println("Notificando cliente 3");
         });
 
@@ -41,18 +40,6 @@ public class exercicio2 {
 
     }
 
-    // Simulando o delay para uma aplicação externa entre 500ms e 5500ms
-    static void simulandoDelay() {
 
-        int min = 500;
-        int max = 5000;
-
-        int randomTime = RANDOM.nextInt(max) + min;
-        try {
-            Thread.sleep(randomTime);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-    }
 
 }
