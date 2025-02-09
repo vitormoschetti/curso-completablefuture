@@ -4,11 +4,11 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Random;
 
-public class SimuladorPreco {
+public class SimuladorValor {
 
     private static final Random random = new Random();
 
-    private SimuladorPreco() {
+    private SimuladorValor() {
     }
 
     //Simula o preco entre 1,00 e 220,00
@@ -18,4 +18,14 @@ public class SimuladorPreco {
                 .setScale(2, RoundingMode.HALF_UP);
     }
 
+    public static BigDecimal simularTransacao() {
+        return BigDecimal.valueOf(random.nextInt(2000)+1000)
+                .multiply(BigDecimal.valueOf(random.nextDouble(100) + 1))
+                .setScale(2, RoundingMode.HALF_UP);
+    }
+
+
+    public static BigDecimal simularDolar() {
+        return BigDecimal.valueOf(random.nextDouble(0.2)+ 0.1);
+    }
 }

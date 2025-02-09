@@ -1,6 +1,6 @@
 package pratica.modulo3.thenapply.exercicios;
 
-import shared.SimuladorPreco;
+import shared.SimuladorValor;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -18,7 +18,7 @@ public class Exercicio1 {
 
         // supplyAsync - buscando preço
         final var future = CompletableFuture.supplyAsync(() -> {
-                    final var preco = SimuladorPreco.simularPreco();
+                    final var preco = SimuladorValor.simularPreco();
                     System.out.println("Preço original: " + preco);
                     return preco;
                 })

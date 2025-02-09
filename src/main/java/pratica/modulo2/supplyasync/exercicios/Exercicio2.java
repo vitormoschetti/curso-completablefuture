@@ -1,7 +1,7 @@
 package pratica.modulo2.supplyasync.exercicios;
 
 import shared.SimuladorDelay;
-import shared.SimuladorPreco;
+import shared.SimuladorValor;
 
 import java.math.BigDecimal;
 import java.util.Random;
@@ -22,14 +22,14 @@ public class Exercicio2 {
         //Simulando busca no fornecedor e retornando preço buscando
         CompletableFuture<BigDecimal> futureFornecedorA = CompletableFuture.supplyAsync(() -> {
             SimuladorDelay.delay();
-            final var preco = SimuladorPreco.simularPreco();
+            final var preco = SimuladorValor.simularPreco();
             System.out.println("Preço fornecedor A: " + preco);
             return preco;
         });
         //Simulando busca no fornecedor e retornando preço buscando
         CompletableFuture<BigDecimal> futureFornecedorB = CompletableFuture.supplyAsync(() -> {
             SimuladorDelay.delay();
-            final var preco = SimuladorPreco.simularPreco();
+            final var preco = SimuladorValor.simularPreco();
             System.out.println("Preço fornecedor B: " + preco);
             return preco;
         });
@@ -37,7 +37,7 @@ public class Exercicio2 {
         //Simulando busca no fornecedor e retornando preço buscando
         CompletableFuture<BigDecimal> futureFornecedorC = CompletableFuture.supplyAsync(() -> {
             SimuladorDelay.delay();
-            final var preco = SimuladorPreco.simularPreco();
+            final var preco = SimuladorValor.simularPreco();
             System.out.println("Preço fornecedor C: " + preco);
             return preco;
         });
