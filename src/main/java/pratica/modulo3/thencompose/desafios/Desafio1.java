@@ -3,7 +3,6 @@ package pratica.modulo3.thencompose.desafios;
 import shared.SimuladorDelay;
 import shared.SimuladorValor;
 
-import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.concurrent.CompletableFuture;
 

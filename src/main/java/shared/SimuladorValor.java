@@ -30,7 +30,6 @@ public class SimuladorValor {
                 .setScale(2, RoundingMode.HALF_UP);
     }
 
-
     public static BigDecimal simularDolar() {
         return BigDecimal.valueOf(random.nextDouble(0.2)+ 0.1);
     }
