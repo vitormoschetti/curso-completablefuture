@@ -11,7 +11,6 @@ public class SimuladorValor {
     private SimuladorValor() {
     }
 
-    //Simula o preco entre 1,00 e 220,00
     public static BigDecimal simularPreco() {
         return BigDecimal.valueOf(random.nextInt(20)+1)
                 .multiply(BigDecimal.valueOf(random.nextDouble(10) + 1))
