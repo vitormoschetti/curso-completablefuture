@@ -6,6 +6,6 @@ public enum TipoNotificacao {
     CONFIRMADO,
     EM_PREPARACAO,
     ROTA_ENTREGA,
-    ENTREGUE;
+    ENTREGUE
 
 }
