@@ -67,6 +67,7 @@ public class Desafio1 {
             return result;
         });
 
+        //Combinando os futures e multiplicando seus valores
         precoFuture.thenCombine(estoqueFuture, BigDecimal::multiply)
                 .thenApply(totalPedido -> totalPedido.setScale(2, RoundingMode.HALF_UP))
                 .thenAccept(totalPedido -> System.out.println("Valor total do pedido R$" + totalPedido));
