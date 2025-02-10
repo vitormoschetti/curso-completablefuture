@@ -42,7 +42,7 @@ public class Exercicio1 {
                     return totalVendas;
                 })
                 .exceptionally(ex -> {
-                    System.out.println("Falha ao recuperar o total de vendas.");
+                    System.err.println("Falha ao recuperar o total de vendas.");
                     return BigDecimal.ZERO;
                 })
                 .thenAccept(totalVendas -> System.out.println("Total de vendas final: R$" + totalVendas));

@@ -24,7 +24,7 @@ public class SimuladorEmpresa {
     }
 
     public static boolean simularFalha() {
-        return random.nextInt(10) < 2;
+        return random.nextInt(10) < 3;
     }
 
     public static boolean simularDisponibilidade() {
