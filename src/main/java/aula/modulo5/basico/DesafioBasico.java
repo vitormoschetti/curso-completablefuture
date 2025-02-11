@@ -1,6 +1,8 @@
 package aula.modulo5.basico;
 
+import java.math.BigDecimal;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ThreadLocalRandom;
 
 import static shared.SimuladorDelay.delay;
 import static shared.SimuladorDelay.delayFinal;
@@ -10,36 +12,49 @@ public class DesafioBasico {
 
     public static void main(String[] args) {
 
-        CompletableFuture.runAsync(() -> {
-            System.out.println("Recebendo pedido do cliente...");
-            delay();
-            if (simularFalha()) {
-                throw new RuntimeException("Falha ao confirmar pedido do cliente");
-            }
-            System.out.println("Pedido do cliente confirmado!");
-            enviarNotificacao(TipoNotificacao.CONFIRMADO);
-        }).exceptionally(ex -> {
-            System.err.println("Falha ao confirmar pedido do cliente");
-            enviarNotificacao(TipoNotificacao.CANCELADO);
-            return null;
-        });
+        final var pedido = SimuladorPedido.pedir();
+
+        CompletableFuture.supplyAsync(() -> {
+                    System.out.println("Recebendo um novo pedido");
+                    delay();
+                    validarSaldo(pedido);
+                    pedido.confirmar();
+                    System.out.printf("Pedido %s confirmado!%n", pedido.getId());
+                    return true;
+                }).thenCompose(confirmado ->
+                        notificarCliente(pedido))
+                .exceptionally(ex -> {
+                    System.err.println("Falha ao processar pedido! " + pedido.getId());
+                    notificarCliente(pedido);
+                    return null;
+                });
 
         delayFinal();
 
     }
 
-    private static void enviarNotificacao(TipoNotificacao tipoNotificacao) {
-        if (tipoNotificacao == TipoNotificacao.CONFIRMADO) {
-            System.out.println("Notificação: Seu pedido foi confirmado!");
-        } else if (tipoNotificacao == TipoNotificacao.EM_PREPARACAO) {
-            System.out.println("Notificação: Seu pedido está em preparação!");
-        } else if (tipoNotificacao == TipoNotificacao.ROTA_ENTREGA) {
-            System.out.println("Notificação: Seu pedido saiu para entrega!");
-        } else if (tipoNotificacao == TipoNotificacao.ENTREGUE) {
-            System.out.println("Notificação: Pedido entregue! Boa refeição!");
-        } else if (tipoNotificacao == TipoNotificacao.CANCELADO) {
-            System.out.println("Notificação: Pedido cancelado!");
-        }
+    private static CompletableFuture<Void> notificarCliente(Pedido pedido) {
+        return CompletableFuture.runAsync(() -> {
+            System.out.println("Notificando cliente...");
+            delay();
+            System.out.println("Notificação: " + pedido.getStatus().notificacao());
+        });
     }
+
+    private static void validarSaldo(Pedido pedido) {
+        System.out.println("Verificando saldo do cliente");
+        if (simularFalha()) {
+            pedido.cancelar();
+            throw new RuntimeException("Erro ao acessar o sistema de validação de saldo");
+        }
+        final var saldoInsuficiente = pedido.getValor().compareTo(BigDecimal.valueOf(ThreadLocalRandom.current().nextDouble(10, 30))) < 0;
+        if (saldoInsuficiente) {
+            pedido.semSaldo();
+            System.err.printf("Pedido %s sem saldo!%n", pedido.getId());
+            throw new RuntimeException("Saldo insuficiente");
+        }
+        System.out.println("Saldo validado com sucesso!");
+    }
+
 
 }
