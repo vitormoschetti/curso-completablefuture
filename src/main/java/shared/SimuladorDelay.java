@@ -9,11 +9,10 @@ public class SimuladorDelay {
 
     private SimuladorDelay(){}
 
-    // Simulando o delay para uma aplicação externa entre 500ms e 5500ms
     public static void delay() {
 
         int min = 500;
-        int max = 5000;
+        int max = 1500;
 
         int randomTime = random.nextInt(max) + min;
         try {

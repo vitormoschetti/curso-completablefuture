@@ -38,4 +38,16 @@ public class Pedido {
     public void confirmar() {
         this.status = StatusPedido.CONFIRMADO;
     }
+
+    public void preparar() {
+        this.status = StatusPedido.EM_PREPARACAO;
+    }
+
+    public void rotaEntrega() {
+        this.status = StatusPedido.ROTA_ENTREGA;
+    }
+
+    public void negado() {
+        this.status = StatusPedido.NEGADO;
+    }
 }
