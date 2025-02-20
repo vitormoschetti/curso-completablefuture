@@ -2,11 +2,14 @@ package aula.modulo5.avancado;
 
 import aula.modulo5.avancado.model.Transacao;
 import aula.modulo5.avancado.model.enums.TipoTransacao;
+import aula.modulo5.avancado.util.RetryUtil;
 
 import java.math.BigDecimal;
 import java.util.concurrent.CompletableFuture;
 
 import static aula.modulo5.avancado.SimuladorDesafioAvancado.*;
+import static aula.modulo5.avancado.util.RetryUtil.retry;
+import static shared.SimuladorDelay.delay;
 import static shared.SimuladorDelay.delayFinal;
 
 public class DesafioAvancado {
@@ -15,7 +18,7 @@ public class DesafioAvancado {
 
         final var transacao = criarTransacao(BigDecimal.TEN, TipoTransacao.PIX);
 
-        verificarIdentidadeUsuario(transacao)
+        retry(() -> verificarIdentidadeUsuario(transacao))
                 .whenComplete((result, ex) -> {
                     if(ex != null) {
                         System.err.println(ex.getMessage());
@@ -32,6 +35,7 @@ public class DesafioAvancado {
 
     private static CompletableFuture<Boolean> verificarIdentidadeUsuario(Transacao transacao) {
         return CompletableFuture.supplyAsync(() -> {
+            delay();
             final var comunicacaoFalhou = simularFalha();
             if (Boolean.TRUE.equals(comunicacaoFalhou)) {
                 System.err.printf("[Transação %s] - Falha de comunicação com o sistema de verificação de identidade!\n", transacao.getId());

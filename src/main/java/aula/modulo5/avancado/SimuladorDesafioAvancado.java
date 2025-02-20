@@ -19,6 +19,6 @@ public class SimuladorDesafioAvancado {
     }
 
     public static boolean simularFalha() {
-        return Math.random() > 0.3;
+        return Math.random() > 0.7;
     }
 }
