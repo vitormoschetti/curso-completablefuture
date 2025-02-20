@@ -15,6 +15,16 @@ public class DesafioAvancado {
 
         final var transacao = criarTransacao(BigDecimal.TEN, TipoTransacao.PIX);
 
+        verificarIdentidadeUsuario(transacao)
+                .whenComplete((result, ex) -> {
+                    if(ex != null) {
+                        System.err.println(ex.getMessage());
+                    }else {
+                        System.out.println(result);
+                    }
+                });
+
+
         delayFinal();
 
     }
