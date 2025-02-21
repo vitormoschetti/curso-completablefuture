@@ -7,6 +7,8 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import static aula.modulo5.avancado.model.enums.TipoTransacao.exigeValidacaoDeSaldo;
+
 public class Transacao {
 
     private final UUID id;
@@ -44,7 +46,7 @@ public class Transacao {
         return status;
     }
 
-    public void rejeitarIdentidade() {
+    public void registrarFalhaVerificacaoIdentidade() {
         status = StatusTransacao.FALHA_VERIFICACAO_IDENTIDADE;
         dataAtualizacao = LocalDateTime.now();
         dataCancelamento = LocalDateTime.now();
@@ -58,5 +60,21 @@ public class Transacao {
 
     public Boolean temIdendidadeValida() {
         return !StatusTransacao.FALHA_VERIFICACAO_IDENTIDADE.equals(status);
+    }
+
+    public boolean temValidacaoDeSaldo() {
+        return exigeValidacaoDeSaldo(tipo);
+    }
+
+    public void registrarFalhaVerificacaoLimite() {
+        status = StatusTransacao.FALHA_VERIFICACAO_LIMITE;
+        dataAtualizacao = LocalDateTime.now();
+        dataCancelamento = LocalDateTime.now();
+    }
+
+    public void registrarSemLimite() {
+        status = StatusTransacao.SEM_LIMITE;
+        dataAtualizacao = LocalDateTime.now();
+        dataCancelamento = LocalDateTime.now();
     }
 }

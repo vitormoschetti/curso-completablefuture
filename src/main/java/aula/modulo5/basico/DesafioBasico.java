@@ -45,7 +45,7 @@ public class DesafioBasico {
             delay();
             if (simularFalha()) {
                 pedido.cancelar();
-                throw new RuntimeException("Erro ao acessar o sistema de validação de saldo");
+                throw new RuntimeException("Erro ao acessar o sistema de validação de saldoConta");
             }
             pedido.preparar();
             delay();
@@ -75,15 +75,15 @@ public class DesafioBasico {
 
     private static CompletableFuture<Void> validarSaldo(Pedido pedido) {
         return CompletableFuture.runAsync(() -> {
-        System.out.println("Verificando saldo do cliente");
+        System.out.println("Verificando saldoConta do cliente");
         if (simularFalha()) {
             pedido.cancelar();
-            throw new RuntimeException("Erro ao acessar o sistema de validação de saldo");
+            throw new RuntimeException("Erro ao acessar o sistema de validação de saldoConta");
         }
         final var saldoInsuficiente = pedido.getValor().compareTo(BigDecimal.valueOf(ThreadLocalRandom.current().nextDouble(10, 30))) < 0;
         if (saldoInsuficiente) {
             pedido.semSaldo();
-            System.err.printf("Pedido %s sem saldo!%n", pedido.getId());
+            System.err.printf("Pedido %s sem saldoConta!%n", pedido.getId());
             throw new RuntimeException("Saldo insuficiente");
         }
         System.out.println("Saldo validado com sucesso!");

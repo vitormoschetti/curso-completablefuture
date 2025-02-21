@@ -18,15 +18,24 @@ public class SimuladorDesafioAvancado {
 
     }
 
-    public static boolean simularIdentidadeUsuario(UUID idUsuario) {
-        return Math.random() > 0;
+    public static boolean simularIdentidadeUsuario() {
+        return Math.random() > 0.2;
     }
 
     public static boolean simularFalha() {
-        return Math.random() > 0.1;
+        return Math.random() > 0.4;
+    }
+
+    public static BigDecimal simularValorTransacao() {
+        return BigDecimal.valueOf(RANDOM.nextDouble(250.0));
     }
 
     public static SaldoRecord simularSaldo() {
         return new SaldoRecord(BigDecimal.valueOf(RANDOM.nextDouble(50.0)));
     }
+
+    public static BigDecimal simularLimite() {
+        return BigDecimal.valueOf(RANDOM.nextDouble(500.0));
+    }
+
 }
