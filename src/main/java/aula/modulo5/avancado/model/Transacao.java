@@ -40,17 +40,23 @@ public class Transacao {
         return valor;
     }
 
-    public TipoTransacao getTipo() {
-        return tipo;
-    }
-
     public StatusTransacao getStatus() {
         return status;
     }
 
     public void rejeitarIdentidade() {
-        this.status = StatusTransacao.FALHA_VERIFICACAO_IDENTIDADE;
-        this.dataAtualizacao = LocalDateTime.now();
-        this.dataCancelamento = LocalDateTime.now();
+        status = StatusTransacao.FALHA_VERIFICACAO_IDENTIDADE;
+        dataAtualizacao = LocalDateTime.now();
+        dataCancelamento = LocalDateTime.now();
+    }
+
+    public void registrarPendenteSaldoAntigo() {
+        status = StatusTransacao.PENDENTE_COM_SALDO_ANTERIOR;
+        dataAtualizacao = LocalDateTime.now();
+        dataCancelamento = LocalDateTime.now();
+    }
+
+    public Boolean temIdendidadeValida() {
+        return !StatusTransacao.FALHA_VERIFICACAO_IDENTIDADE.equals(status);
     }
 }
