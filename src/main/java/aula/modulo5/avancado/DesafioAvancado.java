@@ -23,19 +23,40 @@ public class DesafioAvancado {
                 .thenCompose(__ -> {
                     if (Boolean.FALSE.equals(transacao.temIdendidadeValida())) {
                         System.err.printf("[Transação %s] - Transação encerrada! Status: %s\n", transacao.getId(), transacao.getStatus());
-                        return CompletableFuture.completedFuture(null);
+                        throw new RuntimeException(String.format("[Transação %s] - Transação encerrada! Status: %s\n", transacao.getId(), transacao.getStatus()));
                     }
                     return consultarSaldo(transacao);
-                }).thenApply(saldo -> new TransacaoComSaldo(transacao, saldo)).thenCompose(transacaoComSaldo -> {
-                    if (transacaoComSaldo.temValidacaoDeSaldo()) {
+                }).thenApply(saldo -> new TransacaoComSaldo(transacao, saldo))
+                .thenCompose(transacaoComSaldo -> {
+                    if (transacaoComSaldo.temValidacaoDeLimite()) {
                         return validarLimiteComRetry(transacaoComSaldo);
                     }
                     return CompletableFuture.completedFuture(transacaoComSaldo);
+                }).thenCompose(transacaoComSaldo -> {
+                    if (transacaoComSaldo.podeSerProcessada()) {
+                        if (transacaoComSaldo.temValidacaoDeSaldo()) {
+                            return validarSaldo(transacaoComSaldo);
+                        }
+                        return CompletableFuture.completedFuture(transacaoComSaldo);
+                    }
+                    return CompletableFuture.completedFuture(null);
                 });
 
 
         delayFinal();
 
+    }
+
+    private static CompletableFuture<TransacaoComSaldo> validarSaldo(TransacaoComSaldo transacaoComSaldo) {
+        return CompletableFuture.supplyAsync(() -> {
+            if (Boolean.FALSE.equals(transacaoComSaldo.temSaldoParaTransacao())) {
+                System.err.printf("[Transação %s] - Usuário %s sem saldo! Transação encerrada!\n", transacaoComSaldo.transacaoId(), transacaoComSaldo.usuarioId());
+                transacaoComSaldo.registrarSemSaldo();
+                return transacaoComSaldo;
+            }
+            System.out.printf("[Transação %s] - Usuário %s com saldo! Transação continuada!\n", transacaoComSaldo.transacaoId(), transacaoComSaldo.usuarioId());
+            return transacaoComSaldo;
+        });
     }
 
     private static CompletableFuture<TransacaoComSaldo> validarLimiteComRetry(TransacaoComSaldo transacaoComSaldo) {
@@ -74,16 +95,16 @@ public class DesafioAvancado {
     private static CompletableFuture<SaldoRecord> consultarSaldo(Transacao transacao) {
 
         return CompletableFuture.supplyAsync(() -> {
-            System.out.printf("[Transação %s] - buscando saldoConta do usuário %s\n", transacao.getId(), transacao.getIdUsuario());
+            System.out.printf("[Transação %s] - buscando saldo do usuário %s\n", transacao.getId(), transacao.getIdUsuario());
             delay();
             final var comunicacaoFalhou = simularFalha();
             if (comunicacaoFalhou) {
-                System.err.printf("[Transação %s] - Falha de comunicação com o sistema de saldoConta!\n", transacao.getId());
-                System.out.printf("[Transação %s] - buscando saldoConta do usuário %s no cache\n", transacao.getId(), transacao.getIdUsuario());
+                System.err.printf("[Transação %s] - Falha de comunicação com o sistema de saldo!\n", transacao.getId());
+                System.out.printf("[Transação %s] - buscando saldo do usuário %s no cache\n", transacao.getId(), transacao.getIdUsuario());
                 transacao.registrarPendenteSaldoAntigo();
                 return simularSaldo();
             }
-            System.out.printf("[Transação %s] - sucesso na busca do saldoConta do usuário %s\n", transacao.getId(), transacao.getIdUsuario());
+            System.out.printf("[Transação %s] - sucesso na busca do saldo do usuário %s\n", transacao.getId(), transacao.getIdUsuario());
             return simularSaldo();
         });
 

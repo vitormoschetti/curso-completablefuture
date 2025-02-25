@@ -7,6 +7,8 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import static aula.modulo5.avancado.model.enums.StatusTransacao.liberadaParaProcessamento;
+import static aula.modulo5.avancado.model.enums.TipoTransacao.exigeValidacaoDeLimite;
 import static aula.modulo5.avancado.model.enums.TipoTransacao.exigeValidacaoDeSaldo;
 
 public class Transacao {
@@ -62,8 +64,8 @@ public class Transacao {
         return !StatusTransacao.FALHA_VERIFICACAO_IDENTIDADE.equals(status);
     }
 
-    public boolean temValidacaoDeSaldo() {
-        return exigeValidacaoDeSaldo(tipo);
+    public boolean temValidacaoDeLimite() {
+        return exigeValidacaoDeLimite(tipo);
     }
 
     public void registrarFalhaVerificacaoLimite() {
@@ -76,5 +78,19 @@ public class Transacao {
         status = StatusTransacao.SEM_LIMITE;
         dataAtualizacao = LocalDateTime.now();
         dataCancelamento = LocalDateTime.now();
+    }
+
+    public boolean temValidacaoDeSaldo() {
+        return exigeValidacaoDeSaldo(tipo);
+    }
+
+    public void registrarSemSaldo() {
+        status = StatusTransacao.SEM_SALDO;
+        dataAtualizacao = LocalDateTime.now();
+        dataCancelamento = LocalDateTime.now();
+    }
+
+    public boolean podeSerProcessada() {
+        return liberadaParaProcessamento(status);
     }
 }

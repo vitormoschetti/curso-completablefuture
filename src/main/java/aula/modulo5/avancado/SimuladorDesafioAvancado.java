@@ -23,7 +23,7 @@ public class SimuladorDesafioAvancado {
     }
 
     public static boolean simularFalha() {
-        return Math.random() > 0.4;
+        return Math.random() > 0.2;
     }
 
     public static BigDecimal simularValorTransacao() {

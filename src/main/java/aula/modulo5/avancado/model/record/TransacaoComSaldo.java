@@ -7,8 +7,8 @@ import java.math.BigDecimal;
 import java.util.UUID;
 
 public record TransacaoComSaldo(Transacao transacao, SaldoRecord saldoConta) {
-    public boolean temValidacaoDeSaldo() {
-        return transacao().temValidacaoDeSaldo();
+    public boolean temValidacaoDeLimite() {
+        return transacao().temValidacaoDeLimite();
     }
 
     public void registrarFalhaVerificacaoLimite() {
@@ -33,5 +33,21 @@ public record TransacaoComSaldo(Transacao transacao, SaldoRecord saldoConta) {
 
     public void registrarSemLimite() {
         transacao.registrarSemLimite();
+    }
+
+    public boolean temValidacaoDeSaldo() {
+        return transacao().temValidacaoDeSaldo();
+    }
+
+    public boolean temSaldoParaTransacao() {
+        return transacao.getValor().compareTo(saldoConta.valor()) >= 0;
+    }
+
+    public void registrarSemSaldo() {
+        transacao.registrarSemSaldo();
+    }
+
+    public boolean podeSerProcessada() {
+        return transacao.podeSerProcessada();
     }
 }
