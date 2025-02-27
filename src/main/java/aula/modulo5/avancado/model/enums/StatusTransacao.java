@@ -9,7 +9,8 @@ public enum StatusTransacao {
     FALHA_VERIFICACAO_LIMITE,
     SEM_LIMITE,
     SEM_SALDO,
-    PENDENTE;
+    PENDENTE,
+    PROCESSADA_COM_SUCESSO;
 
     private static final Set<StatusTransacao> LIBERADO_PARA_PROCESSAMENTO = Set.of(PENDENTE, PENDENTE_COM_SALDO_ANTERIOR);
 

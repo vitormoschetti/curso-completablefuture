@@ -1,12 +1,15 @@
 package aula.modulo5.avancado;
 
 import aula.modulo5.avancado.model.Transacao;
-import aula.modulo5.avancado.model.enums.TipoTransacao;
+import aula.modulo5.avancado.model.enums.StatusTransacao;
 import aula.modulo5.avancado.model.record.SaldoRecord;
 import aula.modulo5.avancado.model.record.TransacaoComSaldo;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
 import static aula.modulo5.avancado.SimuladorDesafioAvancado.*;
 import static aula.modulo5.avancado.util.RetryUtil.retry;
@@ -17,9 +20,37 @@ public class DesafioAvancado {
 
     public static void main(String[] args) {
 
-        final var transacao = criarTransacao(simularValorTransacao(), TipoTransacao.PIX);
+        final var transacoes = new ArrayList<Transacao>();
+        for (int i = 0; i < 10; i++) {
+            transacoes.add(SimuladorDesafioAvancado.criarTransacao(simularValorTransacao(), simularTipoTransacao()));
+        }
 
-        verificarIdentidadeComRetry(transacao)
+        final var transacoesFuture =
+                transacoes
+                .stream()
+                .map(DesafioAvancado::processarTransacao)
+                        .toList();
+
+        CompletableFuture.allOf(transacoesFuture.toArray(new CompletableFuture[0]))
+                .thenRun(() -> {
+                    Map<StatusTransacao, Long> relatorio = transacoesFuture.stream()
+                            .map(CompletableFuture::join)
+                            .collect(Collectors.groupingBy(Transacao::getStatus, Collectors.counting()));
+
+                    // Exibe o relatório
+                    System.out.println("=== RELATÓRIO DE TRANSAÇÕES ===");
+                    relatorio.forEach((status, quantidade) ->
+                            System.out.printf("Status: %s | Quantidade: %d\n", status, quantidade)
+                    );
+                }).join();
+
+
+        delayFinal();
+
+    }
+
+    private static CompletableFuture<Transacao> processarTransacao(Transacao transacao) {
+        return verificarIdentidadeComRetry(transacao)
                 .thenCompose(__ -> {
                     if (Boolean.FALSE.equals(transacao.temIdendidadeValida())) {
                         System.err.printf("[Transação %s] - Transação encerrada! Status: %s\n", transacao.getId(), transacao.getStatus());
@@ -39,12 +70,21 @@ public class DesafioAvancado {
                         }
                         return CompletableFuture.completedFuture(transacaoComSaldo);
                     }
-                    return CompletableFuture.completedFuture(null);
+                    throw new RuntimeException(String.format("[Transação %s] - Transação encerrada! Status: %s\n", transacao.getId(), transacao.getStatus()));
+                }).thenApply(DesafioAvancado::processamento)
+                .exceptionally(ex -> {
+                    System.err.printf("[Transação %s] - Processamento encerrado com falha!\n", transacao.getId());
+                    return transacao;
                 });
+    }
 
-
-        delayFinal();
-
+    private static Transacao processamento(TransacaoComSaldo transacaoComSaldo) {
+        if (transacaoComSaldo.podeSerProcessada()) {
+            System.out.printf("[Transação %s] - Enviando a transação %s para liquidação!\n", transacaoComSaldo.transacaoId(), transacaoComSaldo.tipo());
+            simularLiquidacao(transacaoComSaldo.transacao());
+            transacaoComSaldo.registrarProcessamento();
+        }
+        return transacaoComSaldo.transacao();
     }
 
     private static CompletableFuture<TransacaoComSaldo> validarSaldo(TransacaoComSaldo transacaoComSaldo) {

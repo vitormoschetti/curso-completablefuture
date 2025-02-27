@@ -2,6 +2,7 @@ package aula.modulo5.avancado.model.record;
 
 import aula.modulo5.avancado.model.Transacao;
 import aula.modulo5.avancado.model.enums.StatusTransacao;
+import aula.modulo5.avancado.model.enums.TipoTransacao;
 
 import java.math.BigDecimal;
 import java.util.UUID;
@@ -49,5 +50,13 @@ public record TransacaoComSaldo(Transacao transacao, SaldoRecord saldoConta) {
 
     public boolean podeSerProcessada() {
         return transacao.podeSerProcessada();
+    }
+
+    public TipoTransacao tipo() {
+        return transacao.getTipo();
+    }
+
+    public void registrarProcessamento() {
+        transacao.registrarProcessamento();
     }
 }

@@ -23,7 +23,11 @@ public class SimuladorDesafioAvancado {
     }
 
     public static boolean simularFalha() {
-        return Math.random() > 0.2;
+        return Math.random() > 0.8;
+    }
+
+    public static TipoTransacao simularTipoTransacao() {
+        return TipoTransacao.values()[RANDOM.nextInt(TipoTransacao.values().length)];
     }
 
     public static BigDecimal simularValorTransacao() {
@@ -38,4 +42,6 @@ public class SimuladorDesafioAvancado {
         return BigDecimal.valueOf(RANDOM.nextDouble(500.0));
     }
 
+    public static void simularLiquidacao(Transacao transacao) {
+    }
 }

@@ -12,7 +12,7 @@ public class SimuladorDelay {
     public static void delay() {
 
         int min = 500;
-        int max = 1500;
+        int max = 2500;
 
         int randomTime = random.nextInt(max) + min;
         try {
@@ -25,7 +25,7 @@ public class SimuladorDelay {
     public static void delayFinal() {
 
         try {
-            Thread.sleep(10000);
+            Thread.sleep(15000);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }

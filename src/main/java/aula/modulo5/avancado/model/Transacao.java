@@ -57,7 +57,6 @@ public class Transacao {
     public void registrarPendenteSaldoAntigo() {
         status = StatusTransacao.PENDENTE_COM_SALDO_ANTERIOR;
         dataAtualizacao = LocalDateTime.now();
-        dataCancelamento = LocalDateTime.now();
     }
 
     public Boolean temIdendidadeValida() {
@@ -92,5 +91,14 @@ public class Transacao {
 
     public boolean podeSerProcessada() {
         return liberadaParaProcessamento(status);
+    }
+
+    public TipoTransacao getTipo() {
+        return tipo;
+    }
+
+    public void registrarProcessamento() {
+        status = StatusTransacao.PROCESSADA_COM_SUCESSO;
+        dataAtualizacao = LocalDateTime.now();
     }
 }
