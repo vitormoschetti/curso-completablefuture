@@ -7,7 +7,7 @@ import aula.modulo5.avancado.model.enums.TipoTransacao;
 import java.math.BigDecimal;
 import java.util.UUID;
 
-public record TransacaoComSaldo(Transacao transacao, SaldoRecord saldoConta) {
+public record TransacaoComSaldo(Transacao transacao, SaldoRecord saldo) {
     public boolean temValidacaoDeLimite() {
         return transacao().temValidacaoDeLimite();
     }
@@ -41,7 +41,7 @@ public record TransacaoComSaldo(Transacao transacao, SaldoRecord saldoConta) {
     }
 
     public boolean temSaldoParaTransacao() {
-        return transacao.getValor().compareTo(saldoConta.valor()) >= 0;
+        return transacao.getValor().compareTo(saldo.valor()) >= 0;
     }
 
     public void registrarSemSaldo() {
