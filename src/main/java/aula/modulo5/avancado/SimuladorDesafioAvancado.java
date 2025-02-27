@@ -6,7 +6,6 @@ import aula.modulo5.avancado.model.record.SaldoRecord;
 
 import java.math.BigDecimal;
 import java.util.Random;
-import java.util.UUID;
 
 public class SimuladorDesafioAvancado {
 
@@ -39,7 +38,7 @@ public class SimuladorDesafioAvancado {
     }
 
     public static BigDecimal simularLimite() {
-        return BigDecimal.valueOf(RANDOM.nextDouble(500.0));
+        return BigDecimal.valueOf(RANDOM.nextDouble(300.0));
     }
 
     public static void simularLiquidacao(Transacao transacao) {
